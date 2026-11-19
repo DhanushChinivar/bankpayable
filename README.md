@@ -12,6 +12,18 @@ Data, Model, Policy, Agent Runtime, Operations). See
 [`INSTRUCTIONS.md`](INSTRUCTIONS.md) for the full specification this build
 satisfies.
 
+**📐 Architecture diagrams:** [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+covers the big picture, the agent pipeline, the six governance layers, the
+payment checks, the OCR sandbox, the approval rules, and the kill switch and audit log.
+
+```mermaid
+flowchart LR
+    inv(["Invoice"]) --> ex["Extraction"] --> risk["Risk scoring"] --> appr["Approval"]
+    appr -->|routine| pay["Payment execution"] --> ledger[("Ledger")]
+    appr -->|"over $5k / new vendor / risky"| human{{"Human review"}} --> pay
+    gov["Guardrails: policy-service · kill switch · audit log"] -.-|checks every step| ex & risk & appr & pay
+```
+
 ## 1. Prerequisites
 
 - **Docker Desktop**, recent stable release, WSL2 backend on Windows.
